@@ -76,6 +76,16 @@ namespace SimpleWifi
 				wlanIface.Disconnect();
 			}		
 		}
+
+		public void Scan() {
+			if (_client.NoWifiAvailable) {
+				return;
+			}
+			foreach (WlanInterface wlanInterface in _client.Interfaces) {
+				wlanInterface.Scan();
+			}
+		}
+
 		public WifiStatus ConnectionStatus
 		{
 			get
@@ -94,8 +104,19 @@ namespace SimpleWifi
 
 		private void inte_WlanNotification(WlanNotificationData notifyData)
 		{
-			if (notifyData.notificationSource == WlanNotificationSource.ACM && (NotifCodeACM)notifyData.NotificationCode == NotifCodeACM.Disconnected)
-				OnConnectionStatusChanged(WifiStatus.Disconnected);
+			if (notifyData.notificationSource == WlanNotificationSource.ACM) {
+				switch ((NotifCodeACM)notifyData.NotificationCode) {
+					case NotifCodeACM.ScanComplete:
+						OnConnectionStatusChanged(WifiStatus.ScanCompleted);
+						break;
+					case NotifCodeACM.ScanFail:
+						OnConnectionStatusChanged(WifiStatus.ScanFailed);
+						break;
+					case NotifCodeACM.Disconnected:
+						OnConnectionStatusChanged(WifiStatus.Disconnected);
+						break;
+				}
+			}
 			else if (notifyData.notificationSource == WlanNotificationSource.MSM && (NotifCodeMSM)notifyData.NotificationCode == NotifCodeMSM.Connected)
 				OnConnectionStatusChanged(WifiStatus.Connected);
 		}
@@ -147,6 +168,8 @@ namespace SimpleWifi
 	public enum WifiStatus
 	{
 		Disconnected,
-		Connected
+		Connected,
+		ScanCompleted,
+		ScanFailed
 	}
 }

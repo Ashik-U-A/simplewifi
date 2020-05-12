@@ -29,6 +29,12 @@ namespace SimpleWifi
 			}
 		}
 
+		public uint NumberOfBssIDs {
+			get {
+				return _network.numberOfBssids;		
+			}
+		}
+
 		public uint SignalStrength
 		{
 			get

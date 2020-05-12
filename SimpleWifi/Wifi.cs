@@ -7,6 +7,7 @@ using SimpleWifi.Win32.Interop;
 
 using NotifCodeACM = SimpleWifi.Win32.Interop.WlanNotificationCodeAcm;
 using NotifCodeMSM = SimpleWifi.Win32.Interop.WlanNotificationCodeMsm;
+using System.Diagnostics;
 
 namespace SimpleWifi
 {
